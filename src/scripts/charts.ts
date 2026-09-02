@@ -1,16 +1,18 @@
-type YearStats = {
-    played: number
-    won: number
-    draw: number
-    lost: number
-    for: number
-    against: number
-    gd: number
+type TeamStats = {
+    team: string,
+    played: number,
+    wins: number,
+    draws: number,
+    losses: number,
+    goalsScored: number,
+    goalsAgainst: number,    
+    goalDifference: number,
+    points: number
 }
 
-type CalendarStructure = {
+type ChartStructure = {
     selectedYear: number
-    inputData: YearStats
+    inputData: TeamStats
 }
 
 export default class Calendar {
@@ -23,7 +25,7 @@ export default class Calendar {
         this.username = process.env.GITHUB_USERNAME!
         this.token = process.env.GITHUB_TOKEN!
         this.repo = process.env.GITHUB_REPOSITORY!
-        this.path = "Calendar.json"
+        this.path = "Charts.json"
     }
 
     async Get() {
@@ -45,7 +47,7 @@ export default class Calendar {
         return { json, string, sha: data.sha }
     }
 
-    async Add(data: CalendarStructure[]) {
+    async Add(data: ChartStructure[]) {
         const { Octokit } = await import("octokit")
         const octoKit = new Octokit({ auth: this.token })
 
@@ -78,7 +80,6 @@ export default class Calendar {
     async Delete(yearInput: number) {
         const { json, sha } = await this.Get()
         delete json[yearInput.toString()]
-
 
         const { Octokit } = await import("octokit")
         const octoKit = new Octokit({ auth: this.token })
